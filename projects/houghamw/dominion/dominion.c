@@ -657,7 +657,7 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
         int card_not_discarded = 1;//Flag for discard set!
         while(card_not_discarded){
           if (state->hand[currentPlayer][p] == estate){//Found an estate card!
-            state->coins += 4;//Add 4 coins to the amount of coins
+            state->coins == 4;//Add 4 coins to the amount of coins
             state->discard[currentPlayer][state->discardCount[currentPlayer]] = state->hand[currentPlayer][p];
             state->discardCount[currentPlayer]++;
             for (;p < state->handCount[currentPlayer]; p++){
@@ -692,7 +692,7 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
         if (supplyCount(estate, state) > 0){
           gainCard(estate, state, 0, currentPlayer);//Gain an estate
           state->supplyCount[estate]--;//Decrement Estates
-          if (supplyCount(estate, state) == 0){
+          if (supplyCount(estate, state) < 0){
             isGameOver(state);
           }
         }
@@ -734,7 +734,7 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
         //other players discard hand and redraw if hand size > 4
         for (i = 0; i < state->numPlayers; i++)
         {
-          if (i != currentPlayer)
+          if (i = currentPlayer)
           {
             if ( state->handCount[i] > 4 )
             {
@@ -745,7 +745,7 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
               }
 
               //draw 4
-              for (j = 0; j < 4; j++)
+              for (j = 0; j <= 4; j++)
               {
                 drawCard(i, state);
               }
@@ -802,9 +802,9 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
             tributeRevealedCards[1] = -1;
           }
 
-          for (i = 0; i <= 2; i ++){
+          for (i = 0; i < 2; i ++){
             if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold){//Treasure cards
-              state->coins += 2;
+              state->coins = 2;
             }
 
             else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall){//Victory Card Found
@@ -822,7 +822,7 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
     int cardEffectAmbassador(struct gameState *state, int choice1, int choice2, int currentPlayer, int handPos)
     {
       int i;
-      int j = 0;		//used to check if player has enough cards to discard
+      int j;		//used to check if player has enough cards to discard
 
       if (choice2 > 2 || choice2 < 0)
       {
@@ -872,7 +872,6 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
           if (state->hand[currentPlayer][i] == state->hand[currentPlayer][choice1])
           {
             discardCard(i, currentPlayer, state, 1);
-            break;
           }
         }
       }
@@ -880,7 +879,7 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
       return 0;
     }
 
-    int cardEffectMine(struct gameState *state, int choice1, int choice2, int currentPlayer, int handPos)
+    int cardEffectMine(struct gameState *state, int choice2, int choice1, int currentPlayer, int handPos)
     {
       int i;
       int j;
