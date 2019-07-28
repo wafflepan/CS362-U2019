@@ -692,7 +692,9 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
         if (supplyCount(estate, state) > 0){
           gainCard(estate, state, 0, currentPlayer);//Gain an estate
           state->supplyCount[estate]--;//Decrement Estates
-          if (supplyCount(estate, state) < 0){
+    //      printf("Estates: %d\n",state->supplyCount[estate]);
+          if (supplyCount(estate, state) <= 0){
+              //printf("Estates: %d\n",state->supplyCount[estate]);
             isGameOver(state);
           }
         }
@@ -704,6 +706,7 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
 
     int cardEffectMinion(struct gameState *state, int choice1, int choice2, int currentPlayer, int handPos)
     {
+      //printf("Minion Effect, current player %d has %d cards. \n",currentPlayer,numHandCards(state));
       int i;
       int j;
       //+1 action
@@ -722,6 +725,7 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
         //discard hand
         while(numHandCards(state) > 0)
         {
+          //printf("Cards: %d, handpos %d player %d\n",numHandCards(state),handPos,currentPlayer);
           discardCard(handPos, currentPlayer, state, 0);
         }
 
@@ -803,15 +807,18 @@ int cardEffectAmbassador(struct gameState*,int,int,int,int);
           }
 
           for (i = 0; i < 2; i ++){
+//printf("Checking card...\n");
             if (tributeRevealedCards[i] == copper || tributeRevealedCards[i] == silver || tributeRevealedCards[i] == gold){//Treasure cards
-              state->coins = 2;
+//printf("card is treasure\n");
+              state->coins += 2;
             }
-
             else if (tributeRevealedCards[i] == estate || tributeRevealedCards[i] == duchy || tributeRevealedCards[i] == province || tributeRevealedCards[i] == gardens || tributeRevealedCards[i] == great_hall){//Victory Card Found
+//printf("card is victory\n");
               drawCard(currentPlayer, state);
               drawCard(currentPlayer, state);
             }
             else{//Action Card
+            //  printf("card is action\n");
               state->numActions = state->numActions + 2;
             }
           }
