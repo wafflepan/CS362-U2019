@@ -137,6 +137,7 @@ if (nextPlayer > (G.numPlayers - 1)){
       int cardcheck = cardEffectTribute(&G, players, nextPlayer);
       assert(cardcheck == 0);
 
+int tributecards[2] = {-1,-1}
       //Testing against expected results
 
       if ((G.discardCount[nextPlayer] + G.deckCount[nextPlayer]) <= 1){ //If there's not enough cards for two
@@ -159,7 +160,7 @@ int expectedcoins=0;
 int lastcard = -1;
     for(tributeitr=0;tributeitr<2;tributeitr++){ //get both tribute cards, check what they are, calculate desired output
     int card = G.deck[nextPlayer][G.deckCount[nextPlayer]-tributeitr+1];
-if(card == lastcard){ //Ignore duplicate cards
+if(card<0 || card == lastcard){ //Ignore duplicate or invalid cards
   break;
 }
 if (card==copper || card==silver || card==gold){
