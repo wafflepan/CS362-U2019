@@ -12,15 +12,15 @@ char inputChar()
 
 char *inputString()
 {
-  int tryreset = rand()%50;
-  if(tryreset == 0){
-    return "reset";
-  }
-    int length = rand()%257;
+  //int tryreset = rand()%50;
+  //if(tryreset == 0){
+  //  return "reset";
+  //}
+    int length = rand()%6;
     char* string = malloc(length*sizeof(char));
     int i;
     for(i=0;i<length;i++){
-      string[i] = inputChar();
+      string[i] = (char)((rand()%25) + 97);
     }
     string[length] = '\0';
     return string;
