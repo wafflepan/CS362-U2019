@@ -22,8 +22,10 @@ import junit.framework.TestCase;
  *
  * @version $Revision$
  */
-public class UrlValidatorTest extends TestCase {
 
+
+public class UrlValidatorTest extends TestCase {
+	public static int CYCLE_NUMBER = 0;
    private final boolean printStatus = false;
    private final boolean printIndex = false;//print index that indicates current scheme,host,port,path, query test were using.
 
@@ -80,6 +82,7 @@ protected void setUp() {
     * @param testObjects Used to create a url.
     */
    public void testIsValid(Object[] testObjects, long options) {
+	   
       UrlValidator urlVal = new UrlValidator(null, null, options);
       assertTrue(urlVal.isValid("http://www.google.com"));
       assertTrue(urlVal.isValid("http://www.google.com/"));
@@ -116,10 +119,17 @@ protected void setUp() {
                printed = 0;
             }
          }
+         
+         UrlValidatorTest.CYCLE_NUMBER++;
       } while (incrementTestPartsIndex(testPartsIndex, testObjects));
       if (printStatus) {
          System.out.println();
       }
+
+      System.out.print(UrlValidatorTest.CYCLE_NUMBER);
+      System.out.print('\n');
+
+      UrlValidatorTest.CYCLE_NUMBER = 0;
    }
 
    public void testValidator202() {
