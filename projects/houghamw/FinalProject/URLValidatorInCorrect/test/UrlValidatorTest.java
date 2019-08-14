@@ -16,6 +16,7 @@
  */
 
 import junit.framework.TestCase;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Performs Validation Test for url validations.
@@ -38,6 +39,108 @@ protected void setUp() {
       }
    }
 
+   public class URLinstance{
+
+	   public boolean is_valid = true;
+	   public String urlgenerated;
+	   
+	   public URLinstance() {
+		   
+	   }
+   }
+   
+   public int randIndex(int limit) {
+	   return ThreadLocalRandom.current().nextInt(limit);
+   }
+   
+   public void testgenerateRandomTest(){
+	   
+	   UrlValidator validator = new UrlValidator(schemes,0);
+	   validator.isValid("h3t://www.google.com.");
+	   URLinstance newpair = new URLinstance();
+	   //boolean nofailures=true;
+	  int i = 0;
+	  int failed = 0;
+	   //scheme+authority+port+path+query   
+	   for(i=0;i<90000;i++) {
+		   newpair.is_valid=true;
+	   int additionals = randIndex(3);
+	  // System.out.print("Testing loop\n"+i); 
+	   ResultPair schemepair = testUrlScheme[randIndex(testUrlScheme.length)];
+	   if(!schemepair.valid) {
+		   newpair.is_valid = false;
+	   }
+	   newpair.urlgenerated = schemepair.item;
+	   ResultPair authpair = testUrlAuthority[randIndex(testUrlAuthority.length)];
+	   if(!authpair.valid) {
+		   newpair.is_valid = false;
+	   }
+	   newpair.urlgenerated = newpair.urlgenerated+authpair.item;
+	   ResultPair portpair = new ResultPair(null,false);
+	   if(additionals>0) {
+		   portpair = testUrlPort[randIndex(testUrlPort.length)];
+		   if(!portpair.valid) {
+			   newpair.is_valid = false;
+		   }
+		   additionals--;
+
+		   newpair.urlgenerated = newpair.urlgenerated+portpair.item;
+	   }
+	   ResultPair pathpair = new ResultPair(null,false);
+	   if(additionals>0) {
+	   pathpair = testPath[randIndex(testPath.length)];
+	   if(!pathpair.valid) {
+		   newpair.is_valid = false;
+	   }
+	   additionals--;
+
+	   newpair.urlgenerated = newpair.urlgenerated+pathpair.item;
+	   }
+	   ResultPair querypair = new ResultPair(null,false);
+	   if(additionals>0) {
+	   querypair = testUrlQuery[randIndex(testUrlQuery.length)];
+	   if(!querypair.valid) {
+		   newpair.is_valid = false;
+	   }
+	   additionals--;
+
+	   newpair.urlgenerated = newpair.urlgenerated+querypair.item;
+	   }
+	   boolean result = validator.isValid(newpair.urlgenerated);
+	   if(result == newpair.is_valid) {
+		   result = true;
+	   }
+	   else {
+		   result = false;
+	   }
+	   if(newpair.is_valid == true){
+		   if(result == false) {
+			 System.out.print("Url incorrectly failed: "+newpair.urlgenerated+'\n'); 
+			 failed++;
+		   }
+			 else {
+			 
+		   
+		   }
+	   }
+	   else {
+		   if(result == false) {
+		   System.out.print("Url incorrectly passed: "+newpair.urlgenerated+'\n'); 
+		   failed++;
+		   }
+		   else {
+			   
+		   }
+	   
+	   }
+	   
+   }
+
+	   System.out.print("Tests: "+i+"\nFailures: "+failed+'\n'); 
+	   assertTrue("RandomTests ",failed==0);
+   }
+   
+   
    public void testIsValid() {
         testIsValid(testUrlParts, UrlValidator.ALLOW_ALL_SCHEMES);
         setUp();
@@ -50,6 +153,8 @@ protected void setUp() {
    }
 
    public void testIsValidScheme() {
+	  // generateRandomTest();
+	  // assertTrue("This is a test\n",true);
       if (printStatus) {
          System.out.print("\n testIsValidScheme() ");
       }
@@ -80,6 +185,7 @@ protected void setUp() {
     * @param testObjects Used to create a url.
     */
    public void testIsValid(Object[] testObjects, long options) {
+	  
       UrlValidator urlVal = new UrlValidator(null, null, options);
       assertTrue(urlVal.isValid("http://www.google.com"));
       assertTrue(urlVal.isValid("http://www.google.com/"));
