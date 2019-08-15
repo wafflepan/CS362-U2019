@@ -21,7 +21,7 @@ int testing_total_tests = 0;
 int testing_successful_tests = 0;
 int testing_failed_tests = 0;
 // set NOISY_TEST to 0 to remove printfs from output
-#define NOISY_TEST 0
+#define NOISY_TEST 1
 int printoutResults(){
 
   printf("Total Tests: %d\tPassed Tests: %d\tSuccess Rate:%2.2f%%\n",testing_total_tests,testing_successful_tests,100*((float)testing_successful_tests/(float)testing_total_tests));
@@ -36,9 +36,42 @@ else{
   #if (NOISY_TEST == 1)
     printf("Assert Failed: %s\n",printable);
   #endif
-testing_failed_tests++;
+    testing_failed_tests++;
   return 0;
 }
+}
+
+int cardsfoundhand(int card,struct gameState state){
+int j=0;
+int count = 0;
+for(j=0;j<state.handCount[state.whoseTurn];j++){
+  if(state.hand[state.whoseTurn][j] == card){
+    count++;
+  }
+}
+  return count;
+}
+int cardsfounddeck(int card, struct gameState state){
+  int j=0;
+  int count = 0;
+  for(j=0;j<state.deckCount[state.whoseTurn];j++){
+
+    if(state.deck[state.whoseTurn][j] == card){
+      count++;
+    }
+  }
+
+}
+int cardsfounddiscard(int card, struct gameState state){
+  int j=0;
+  int count = 0;
+  for(j=0;j<state.discardCount[state.whoseTurn];j++){
+
+    if(state.discard[state.whoseTurn][j] == card){
+      count++;
+    }
+  }
+
 }
 
 int main() {
@@ -65,7 +98,7 @@ int main() {
     int random_itr = 0;
     int desired_cycles = 9001;
     #if (NOISY_TEST == 1)
-                    printf("Random test of Baron effect\n");
+                    //printf("Random test of Baron effect\n");
     #endif
     for (random_itr = 0; random_itr < desired_cycles; random_itr++){
 
@@ -82,7 +115,8 @@ int main() {
       handCount = G.handCount[players];
       int deckCount = G.deckCount[players];
       int buyCount = G.numBuys;
-      int estateCount = supplyCount(estate,&G);
+      int estateCount = cardsfoundhand(estate,G);
+      int discardEstates = cardsfounddiscard(estate,G);
       int coinCount = G.coins;
 
     //  printf("initial buys: %d, estateCount: %d\n",buyCount,estateCount);
@@ -91,7 +125,7 @@ int main() {
         G.deckCount[players] = 0;
       }
 
-      int cardcheck = cardEffectBaron(&G, randchoice1, players);
+      int cardcheck = baronAct(randchoice1,&G);
       assert(cardcheck == 0);
 
       //Testing against expected results
@@ -100,8 +134,12 @@ int main() {
       if (randchoice1){ //Expect discard of estate if possible, gain gold.
         if(estateCount > 0){
 
-          testassert(estateCount-1,supplyCount(estate,&G),"-1 estate in hand");
+          testassert(estateCount-1,cardsfoundhand(estate,G),"-1 estate in hand");
           testassert(coinCount+4,G.coins,"+4 coins from selling estate");
+        }
+        else{
+
+          testassert(discardEstates+1,cardsfounddiscard(estate,G),"+1 estate in discard");
         }
 
       }
@@ -143,6 +181,12 @@ int main() {
 if(!testing_failed_tests){ //Must pass all asserts in this test to succeed
   testing_failed_tests = 0;
     testing_successful_tests++;
+    printf("Test Passed.\n");
+}
+else{
+
+
+
 }
     }
     printoutResults();

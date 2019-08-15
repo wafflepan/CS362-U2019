@@ -134,10 +134,10 @@ if (nextPlayer > (G.numPlayers - 1)){
       }
       //
 
-      int cardcheck = cardEffectTribute(&G, players, nextPlayer);
+      int cardcheck = tributeAct(&G);
       assert(cardcheck == 0);
 
-int tributecards[2] = {-1,-1}
+int tributecards[2] = {-1,-1};
       //Testing against expected results
 
       if ((G.discardCount[nextPlayer] + G.deckCount[nextPlayer]) <= 1){ //If there's not enough cards for two

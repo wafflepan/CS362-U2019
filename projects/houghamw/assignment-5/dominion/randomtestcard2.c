@@ -120,7 +120,7 @@ for(pl = 0;pl <= players;pl++){ //Randomize decks for all players
       }
       //
 
-      int cardcheck = cardEffectMinion(&G, randchoice1, randchoice2, players,randHandPos);
+      int cardcheck = minionAct( randchoice1, randchoice2, &G,randHandPos);
       assert(cardcheck == 0);
 
       //Testing against expected results

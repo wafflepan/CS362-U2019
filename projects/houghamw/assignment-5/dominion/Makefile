@@ -1,4 +1,4 @@
-CFLAGS= -Wall -fpic -coverage -lm -std=c99
+CFLAGS= -Wall -fpic -lm -std=c99
 
 rngs.o: rngs.h rngs.c
 	gcc -c rngs.c -g  $(CFLAGS)
@@ -24,16 +24,37 @@ testAll: dominion.o testSuite.c
 interface.o: interface.h interface.c
 	gcc -c interface.c -g  $(CFLAGS)
 
-runtests: testDrawCard 
+runtests: testDrawCard
 	./testDrawCard &> unittestresult.out
 	gcov dominion.c >> unittestresult.out
 	cat dominion.c.gcov >> unittestresult.out
 
+unit2: dominion.o unittestass5.c
+		gcc -o unittestass5 -g unittestass5.c dominion.o rngs.o $(CLFAGS)
+		echo "UNIT TESTING" > unittestresults.out
+		./unittestass5 >> unittestresults.out
+		gcov dominion.c -f -b >> unittestresults.out
+		cat unittestresults.out
+
+randomtestresults:
+		gcc -o randomtestcard1 -g randomtestcard1.c dominion.o rngs.o $(CFLAGS)
+		gcc -o randomtestcard2 -g randomtestcard2.c dominion.o rngs.o $(CFLAGS)
+		gcc -o randomtestcard3 -g randomtestcard3.c dominion.o rngs.o $(CFLAGS)
+
+		echo "-----BARON TEST (CARD 1)-----" > randomtestresults.out
+		./randomtestcard1 &>> randomtestresults.out
+		echo "-----MINION TEST (CARD 2)-----" >> randomtestresults.out
+		./randomtestcard2 &>> randomtestresults.out
+		echo "-----TRIBUTE TEST (CARD 3)-----" >> randomtestresults.out
+		./randomtestcard3 &>> randomtestresults.out
+		echo "-----GCOV INFO-----" >> randomtestresults.out
+		gcov dominion.c -f -b >> randomtestresults.out
+		cat randomtestresults.out
 
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
 
-all: playdom player 
+all: playdom player
 
 clean:
 	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
